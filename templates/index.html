@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Image Encryption/Decryption</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f2f2f2;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+        .button {
+            display: block;
+            width: 100%;
+            max-width: 200px;
+            margin: 20px auto;
+            padding: 15px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #fff;
+            background-color: #ff0000; /* Red color for the button */
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .button:hover {
+            background-color: #cc0000; /* Darker red color on hover */
+        }
+        .input-box {
+            width: calc(50% - 20px);
+            margin: 10px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .result-box {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .loading {
+            display: none;
+            text-align: center;
+        }
+        .loading img {
+            width: 50px;
+            height: 50px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Image Encryption/Decryption</h2>
+        <form id="uploadForm" method="POST" enctype="multipart/form-data">
+            <input type="file" id="file" name="file" accept="image/*"><br><br>
+            <input type="text" id="a" name="a" placeholder="Enter value for a" class="input-box"><br><br>
+            <input type="text" id="b" name="b" placeholder="Enter value for b" class="input-box"><br><br>
+            <button type="button" id="encryptButton" class="button">Encrypt</button>
+            <button type="button" id="decryptButton" class="button" style="display: none;">Decrypt</button>
+        </form>
+
+        <div id="loading" class="loading">
+            <img src="https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/png/valid-blank.png" alt="Loading...">
+        </div>
+
+        <div id="result" class="result-box"></div>
+    </div>
+
+    <script>
+        document.getElementById("encryptButton").addEventListener("click", function() {
+            var form = document.getElementById("uploadForm");
+            var formData = new FormData(form);
+            var xhr = new XMLHttpRequest();
+
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == XMLHttpRequest.DONE) {
+                    if (xhr.status == 200) {
+                        document.getElementById("result").innerHTML = "<h3>Result Image</h3><img src='" + xhr.responseText + "' style='max-width:300px;max-height:300px'>";
+                        document.getElementById("decryptButton").style.display = "block";
+                    }
+                    document.getElementById("loading").style.display = "none";
+                }
+            };
+
+            xhr.open("POST", "/", true);
+            xhr.send(formData);
+            document.getElementById("loading").style.display = "block";
+        });
+
+        document.getElementById("decryptButton").addEventListener("click", function() {
+
+        });
+    </script>
+</body>
+</html>

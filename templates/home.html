@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='https://fonts.googleapis.com/css?family=Bruno Ace' rel='stylesheet'>
+
+    <title>Encryption/Decryption</title>
+</head>
+<style>
+    *{
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Bruno Ace';
+
+        font-weight: lighter;
+    }
+    .container{
+        width: 100%;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #d1d1d1;
+        
+    }
+    .card{
+        
+        width: 400px;
+        background: #fff;
+        padding: 40px;
+        border-radius: 15px;
+        text-align: center;
+        color: #333;
+        
+
+    }
+    .card h1{
+        color: #000;
+    }
+    #photo{
+        display: none;
+    }
+    .button{
+        width: 200px;
+        display: block;
+        background: #e3362c;
+        color: white;
+        padding: 12px;
+        margin: 10px auto;
+        border-radius: 5px;
+        cursor: pointer;
+        border: none;
+    }
+    @keyframes slide {
+    0% {
+    width: 200px;
+    }
+    100% {
+        width: 250px;
+    }
+    }
+
+    .button:hover{
+        animation: slide 0.5s ease-in-out;
+        width: 250px;;
+    }
+    .card img{
+        display: none;
+        width: 180px;
+        height: 180px;
+        margin-top:40px;
+        margin-bottom: 30px;
+    }
+    #enc,#dec{
+        display: none;
+    }
+    .input-box{
+        display:none;
+        width: 100px;
+        text-align: center;
+        border-radius: 25px;
+        padding: 5px;
+        margin-top: 5px;
+        
+    }
+</style>
+<body>
+    <div class="loading"></div>
+    <div  class="container">
+        <div class="card" style="padding: 50px;"> 
+            <h1>We Share</h1>
+            <center>
+            <img src="" alt="" id="pic">
+        
+        </center>
+            <input type="text" id="a" name="a" placeholder="a" class="input-box">
+            <input type="text" id="b" name="b" placeholder="b" class="input-box">
+            <label id="upl" class="button" for="photo">Upload</label>
+            <input type="file" id="photo" accept="image/png,image/jpg ,image/jpeg">
+            <button class="button" id="enc">Encrypt</button>
+            <button class="button" id="dec">Decrypt</button>
+        </div>
+    </div>
+</body>
+
+<script>
+    let pic = document.getElementById("pic");
+    let photo=document.getElementById("photo");
+    let upl = document.getElementById("upl");
+    let enc = document.getElementById("enc");
+    let dec = document.getElementById("dec");
+    let a = document.getElementById("a");
+    let b = document.getElementById("b");
+    photo.onchange=function(){
+        pic.style.display="block";
+        enc.style.display="block";
+        dec.style.display="block";
+        upl.style.display="none";
+        a.style.display ="inline";
+        b.style.display ="inline";
+        pic.src = URL.createObjectURL(photo.files[0]);
+    }
+    enc.onclick=function(){
+        enc.style.display="none";
+        dec.style.display="none";
+        a.style.display ="none";
+        b.style.display ="none";
+        let formData = new FormData();
+        formData.append('file',photo.files[0]);
+        formData.append('a',a.value);
+        formData.append('b',b.value);
+        fetch("/encrypt",{method:"POST",body:formData})
+        .then(responce=>responce.text())
+        .then(data=>{
+            img_path = "/../static/results/"+data;
+            console.log(img_path);
+            pic.src = img_path;
+        });
+
+    }
+    dec.onclick=function(){
+        enc.style.display="none";
+        dec.style.display="none";
+        a.style.display ="none";
+        b.style.display ="none";
+        let formData = new FormData();
+        formData.append('file',photo.files[0]);
+        formData.append('a',a.value);
+        formData.append('b',b.value);
+        fetch("/decrypt",{method:"POST",body:formData})
+        .then(responce=>responce.text())
+        .then(data=>{
+            img_path = "/../static/results/"+data;
+            console.log(img_path);
+            pic.src = img_path;
+        });
+
+    }
+
+
+</script>
+</html>
